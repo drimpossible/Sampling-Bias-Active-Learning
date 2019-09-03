@@ -1,6 +1,5 @@
 from sklearn.metrics import calinski_harabaz_score, f1_score, accuracy_score, confusion_matrix
 import numpy as np
-import torch
 import utils
 from sklearn import preprocessing
 #from numba import njit, prange

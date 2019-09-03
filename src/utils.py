@@ -9,7 +9,6 @@ import logging
 import os
 import sys
 import math
-import torch
 
 from scipy.stats import pearsonr, spearmanr
 from sklearn.metrics import f1_score

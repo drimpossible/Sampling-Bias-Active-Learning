@@ -1,6 +1,5 @@
-import fastText
+import fasttext
 import numpy as np
-import torch
 import utils
 import sys
 import random
@@ -8,7 +7,6 @@ import os
 import pickle
 import logging
 import json
-from tqdm import tqdm, trange
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.svm import LinearSVC
@@ -17,17 +15,17 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 logger = logging.getLogger(__name__)
 
 
-class FastText(fastText.FastText._FastText):
+class FastText(fasttext.FastText._FastText):
     def __init__(self, opt):
         super(FastText, self).__init__()
         self.opt = opt
         self.model = None
 
     def fit_(self, train_path):
-        self.model = fastText.train_supervised(dim=self.opt.dim, input=train_path, epoch=self.opt.num_epochs,
+        self.model = fasttext.train_supervised(dim=self.opt.dim, input=train_path, epoch=self.opt.num_epochs,
                                             lr=self.opt.lr, wordNgrams=self.opt.num_ngrams, verbose=0,
                                             minCount=self.opt.min_count, bucket=self.opt.num_buckets,
-                                               thread=self.opt.workers)
+                                               thread=self.opt.workers, seed=self.opt.seed) #NOTE: Seed added after paper acceptance, for improved stability. To match paper results, remove seed arg.
 
     def quantize_(self, train_path):
         self.model.quantize(input=train_path, qnorm=self.opt.qnorm, retrain=self.opt.retrain_quantize,
@@ -47,7 +45,7 @@ class FastText(fastText.FastText._FastText):
             self.model.save_model(path + f'fasttext_{itr}.bin')
 
     def load_model_(self, path):
-        self.model = fastText.load_model(path)
+        self.model = fasttext.load_model(path)
 
 
 class NaiveBayes:

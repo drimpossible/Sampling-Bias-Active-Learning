@@ -13,13 +13,13 @@ def myargparser():
                            help='Name of dataset Options: agnews')
     data_args.add_argument('--data_dir', type=str, default='../data/', help='Data directory (Eg: ../data/)')
     data_args.add_argument('--num_classes', type=int, default=-1, help='Number of classes in the dataset')
-    
+
     data_args.add_argument('--num_points', type=int, default=0, help='Number of train samples')
     data_args.add_argument('--num_test', type=int, default=0, help='Number of testing samples')
 
     model_args = parser.add_argument_group('Model related arguments')
     model_args.add_argument('--model', type=str, default='FastText', choices=['FastText', 'NaiveBayes', 'LinearSVM', 'BERTL'],
-                            help='Name of model Options: "FastText", "NaiveBayes", "LinearSVM", "BERTL"')
+                            help='Name of model Options: "FastText", "NaiveBayes"')
     model_args.add_argument('--dim', type=int,  default=25, help='Number of testing samples')
     model_args.add_argument('--num_buckets', type=int, default=10000000, help='Number of testing samples')
     model_args.add_argument('--min_count', type=int, default=1, help='Number of testing samples')
@@ -31,12 +31,13 @@ def myargparser():
     model_args.add_argument('--cutoff', type=int, default=100000, help='Retrain after quantization')
     model_args.add_argument('--qout', type=bool, default=False, help='Quantize Classifier')
     model_args.add_argument('--num_ensemble', type=int, default=1, help='Number of classifiers')
+
     misc_args = parser.add_argument_group('Cleaning and backup arguments')
     misc_args.add_argument('--seed', type=int, default=0, help='Seed value for training')
     misc_args.add_argument('--logpath', type=str, default='../logs/', help='Logging directory (../logs)')
     misc_args.add_argument('--workers', type=int, default=8, help='Number of parallel worker threads')
     misc_args.add_argument('--exp_name', type=str, default='test_coreset', help='Name of experiment')
-    
+
     optim_args = parser.add_argument_group('Optimization related arguments')
     optim_args.add_argument('--num_epochs', type=int, default=25, help='Number of epochs to train the model')
     optim_args.add_argument('--lr', type=float, default=0.75, help='Number of epochs to train the model')

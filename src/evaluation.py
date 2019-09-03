@@ -64,7 +64,7 @@ def from_fastText(path):
 if __name__ == '__main__':
     import json
     import os
-    from fastText import train_supervised
+    from fasttext import train_supervised
     from sklearn.metrics import accuracy_score
     import pickle
     import pandas as pd
