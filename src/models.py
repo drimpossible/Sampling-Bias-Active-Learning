@@ -25,7 +25,7 @@ class FastText(fasttext.FastText._FastText):
         self.model = fasttext.train_supervised(dim=self.opt.dim, input=train_path, epoch=self.opt.num_epochs,
                                             lr=self.opt.lr, wordNgrams=self.opt.num_ngrams, verbose=0,
                                             minCount=self.opt.min_count, bucket=self.opt.num_buckets,
-                                               thread=self.opt.workers, seed=self.opt.seed) #NOTE: Seed added after paper acceptance, for improved stability. To match paper results, remove seed arg.
+                                               thread=self.opt.workers) #NOTE: Seed can be added for improved stability as seed=self.opt.seed. To match paper results, seed arg is removed.
 
     def quantize_(self, train_path):
         self.model.quantize(input=train_path, qnorm=self.opt.qnorm, retrain=self.opt.retrain_quantize,

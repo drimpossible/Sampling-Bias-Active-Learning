@@ -99,3 +99,5 @@ if __name__ == '__main__':
         train_idx = np.array(utils.mask_to_idx(dset.is_train))
         y_prob_all, y_prob_test, y_feat = trainer.train(opt=opt, dset=dset, epoch=1, logger=logger, data_logger=data_logger)
         metric_logger_test.add(1, y_prob_test, dset.y_test)
+        #TODO: Charles add the testing code here. Code to input which experiments to compare given metric and model.
+        #For eg: --intersection_across [Default=seeds/runs/query_size/query_function]
