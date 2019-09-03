@@ -16,18 +16,37 @@ If you find our work useful in your research, please consider citing:
 
 ## Installation and Dependencies
 
+Install all requirements required to run the code by:
+	
+	# Activate a new virtual environment
+	$ pip install -r requirements.txt
 
 ## Usage
 
+Step 1: Download all datasets for the main study experiments, 
+	
+	$ bash download_datasets.sh
+
+Code is present in `src` folder.
+
+To reproduce all experimental results,
+
+Step 1: Train all models and generate the actively learnt sample sets:
+
+	$ python generate_all_experiments.py > experiments.sh
+	$ bash experiments.sh
+	$ rm experiments.sh
+
+Step 2: To generate all the results across all tables:
+
+	$ python generate_all_tables.py > tables.sh
+	$ bash tables.sh
+	$ rm tables.sh
 
 Pretrained models available here:
 
-
 ## Contact
 
-If facing any problem with the code, please open an issue here. Please do get in touch with us by email for any questions, comments, suggestions regaarding the paper!
-
-drimpossible at mailfence dot com  
-charles dot dognin at verisk dot com
+If facing any problem with the code, please open an issue here. Please do get in touch with us by email for any questions, comments, suggestions regarding the paper!
 
 Code stubs and formatting borrowed from [Deep Expander Networks](https://github.com/drimpossible/Deep-Expander-Networks) repository.
