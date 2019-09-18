@@ -31,22 +31,25 @@ Code is present in `src` folder.
 
 To reproduce all experimental results,
 
-Step 1: Train all models and generate the actively learnt sample sets:
+Step 1: To train a model with our AL framework, please use:
 
-	$ python generate_all_experiments.py > experiments.sh
-	$ bash experiments.sh
-	$ rm experiments.sh
+	$ cd src 
+	$ python main.py [Your arguments]
+	
+In particular, you can choose:
+- `--dataset`: The dataset (among the 8 available in our paper)
+- `--model`: the model (FastText or Multinomial Bayes)
 
-Step 2: To generate all the results across all tables:
+You can also choose all the hyperparameters of your model as well as many active learning related hyperparameters (acquisition function, number of initial data points, number of points queries at each iterations...)
+For a comprehensive list of arguments, please look at the opts.py function. 	
 
-	$ python generate_all_tables.py > tables.sh
-	$ bash tables.sh
-	$ rm tables.sh
+Step 2: To replicate our results, please use the files: compute_intersection.py, compute_intersection_support.py and python compute_label_entropy.py. During training the active learning model (main.py)
+    we automatically savec all the logs in a logs folder. Please put the path of the logs folder at the place of "YOUR PATH" and choose the experiments you want to replicate.
 
-Pretrained models available here:
 
 ## Contact
 
 If facing any problem with the code, please open an issue here. Please do get in touch with us by email for any questions, comments, suggestions regarding the paper!
+ameya.prabhu@oxford.edu, charles.dognin@verisk.com. 
 
 Code stubs and formatting borrowed from [Deep Expander Networks](https://github.com/drimpossible/Deep-Expander-Networks) repository.
