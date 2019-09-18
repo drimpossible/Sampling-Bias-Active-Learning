@@ -56,3 +56,4 @@ def myargparser():
     activ_args.add_argument('--num_delete_percent',  type=float, default=None, help='Number of deletions for each query')
     misc_args.add_argument('--epoch_num', type=int, default=15, help='Name of experiment')
     return parser
+

@@ -23,13 +23,13 @@ def train(logger, opt, dset, epoch, data_logger):
             if opt.quantize:
                 model.quantize_(train_path)
             logger.debug(f"==> Predicting..")
-            # y_prob_all += model.predict_proba_(dset.X)
+            y_prob_all += model.predict_proba_(dset.X)
             y_test += model.predict_proba_(dset.X_test)
             y_feat = model.get_features_(dset.X)
         else:
             vectorizer = model.fit_(dset)
             logger.debug(f"==> Predicting..")
-            # y_prob_all += model.predict_proba_(dset.X, vectorizer)
+            y_prob_all += model.predict_proba_(dset.X, vectorizer)
             y_test += model.predict_proba_(dset.X_test, vectorizer)
             y_feat = model.get_features_(dset.X, vectorizer)
             del vectorizer

@@ -19,6 +19,8 @@ if __name__ == '__main__':
     utils.opt_assert(opt=opt)
     utils.seed_everything(seed=opt.seed)
 
+    print(opt)
+
     if not os.path.exists(opt.logpath + opt.exp_name + '/logger/'): os.makedirs(opt.logpath + opt.exp_name + '/logger/')
     logger = utils.get_logger(opt.logpath + opt.exp_name + '/logger/')
     logger.debug(f"==> Starting experiment..")
@@ -44,7 +46,6 @@ if __name__ == '__main__':
         for itr in range(opt.query_iter):
             best_prec1 = 0.0
             y_prob_all, y_prob_test, y_feat = trainer.train(opt=opt, dset=dset, epoch=itr, logger=logger, data_logger=data_logger)
-
             pool_idx = np.array(utils.mask_to_idx(~dset.is_train))
             train_idx = np.array(utils.mask_to_idx(dset.is_train))
             #ax.scatter(x=y_feat[train_idx[:1000],0], y=y_feat[train_idx[:1000],1],  c=dset.y[train_idx[:20]], alpha=.7, cmap='tab10')
@@ -53,7 +54,12 @@ if __name__ == '__main__':
 
             logger.debug(f"==> Adding samples..")
             if not opt.query_type == 'coreset':
-                print(y_prob_all.shape)
+                samp_y_prob = y_prob_all[:10]
+                # print(y_prob_all)
+                # print(y_prob_test)
+                print(samp_y_prob)
+                for el in samp_y_prob:
+                   print(max(el))
                 idx, unc = trainer.acquise(y_prob_all=y_prob_all, y_true_all=dset.y, acq=acq, idx=pool_idx, itr=itr, logger=metric_logger_pool)
                 acquised_idx, acquised_funcvals = idx[:num_acq + num_del], unc[:num_acq + num_del]
             else:
