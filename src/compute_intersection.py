@@ -22,7 +22,7 @@ def remove_false_from_iter(array, idxs):
 def get_intersection_precent_across_time(*arrays, substracting=False, ds='', plot=True):
     all_arrays = []
     for path in arrays:
-        full_path = os.path.join(os.path.join(logs_dir, path, 'istrain_tracker.pkl'))
+        full_path = os.path.join(os.path.join(args.logs_dir, path, 'istrain_tracker.pkl'))
         with open(full_path, 'rb') as handle: all_arrays.append(pickle.load(handle))
 
     if not substracting:
@@ -69,7 +69,7 @@ def get_intersection_precent_across_time(*arrays, substracting=False, ds='', plo
 def get_intersection_percent_(*arrays):
     all_arrays = []
     for path in arrays:
-        full_path = os.path.join(os.path.join(logs_dir, path, 'istrain_tracker.pkl'))
+        full_path = os.path.join(os.path.join(args.logs_dir, path, 'istrain_tracker.pkl'))
         with open(full_path, 'rb') as handle:all_arrays.append(pickle.load(handle))
     res_samps = []
     for array in all_arrays:
@@ -114,7 +114,7 @@ def intersection_support_vectors(path_to_support_vectors, *paths_to_runs):
     print(f'There are {len(support_vectors)} support vectors')
     all_arrays = []
     for path in paths_to_runs:
-        full_path = os.path.join(os.path.join(logs_dir, path, 'istrain_tracker.pkl'))
+        full_path = os.path.join(os.path.join(args.logs_dir, path, 'istrain_tracker.pkl'))
         with open(full_path, 'rb') as handle: all_arrays.append(pickle.load(handle))
     res_samps = []
     for array in all_arrays:
@@ -164,125 +164,48 @@ def assert_iter_paths(paths, iter):
 
 if __name__ == '__main__':
     import os
-    import pickle
     import numpy as np
     import utils
-    import pandas as pd
+    import argparse
 
-    logs_dir = 'YOUR PATH'
-    n_iter = 39
-    f = 'FastText', 'NaiveBayes'
-    for model in ['FastText']:
+    # We are assuming two runs and three seeds with 39 iterations, no ensemble or deletion and entropy acquisition function
+    parser = argparse.ArgumentParser(description='Intersection Resulting Samples')
+    parser.add_argument('--logs_dir', type=str, default='../logs/', help='Logs directory')
+    parser.add_argument('--model', type=str, default='FastText', help='Model used')
+    parser.add_argument('--dataset', type=str, default='ag_news', help='Dataset used')
+    parser.add_argument('--same_seed', type=bool, help='Same Seed, Different Runs')
+    parser.add_argument('--dif_seed', type=bool, help='Same Run, Different Seeds')
 
-        for ds in ['ag_news']:
-        # ds_ensemble = ['dbpedia', 'ag_news', 'trec_qa']
-        # for ds in ds_ensemble:'amazon_review_polarity'
-        #     ds = 'amazon_review_full'
-        #     ds = 'yelp_review_full'
+    args = parser.parse_args()
 
-            # General Filter
-            # ds = 'yahoo_answers'
-            print('DS IS: ', ds)
-            print('Model is: ', model)
-            paths_ds = [el for el in os.listdir(logs_dir) if ds in el]
-            paths_model = [el for el in paths_ds if model in el.split('+')]
+    # Filtering the logs with dataset and model
+    paths_ds = [el for el in os.listdir(args.logs_dir) if args.dataset in el]
+    paths_model = [el for el in paths_ds if args.model in el.split('+')]
 
-            # Filter
-            path_random = [el for el in paths_model if 'entropy' in el.split('+')]
-                          # [el for el in paths_model if 'var_ratio' in el.split('+')] + \
-                          # [el for el in paths_model if 'margin_score' in el.split('+')]
-            #path_random_del = [el for el in path_random if 'dit' in el]
-            path_random = [el for el in path_random if 'dit' not in el]
+    # Filters
+    path_random = [el for el in paths_model if 'entropy' in el.split('+')]
+    path_random = [el for el in path_random if 'dit' not in el]
+    path_random = [el for el in path_random if 'num_ensemble' not in el]
+    path_run_0 = sorted([el for el in path_random if 'run+0' in el])
+    path_run_1 = sorted([el for el in path_random if 'run+1' in el])
+    path_seed_0_run_0, path_seed_1_run_0, path_seed_2_run_0 = [el for el in path_run_0 if 'seed+0' in el], \
+                                            [el for el in path_run_0 if 'seed+1' in el], \
+                                            [el for el in path_run_0 if 'seed+2' in el]
 
-            #path_random_del = [el for el in path_random_del if 'num_ensemble' not in el]
-            path_random = [el for el in path_random if 'num_ensemble' not in el]
+    path_seed_0_run_1, path_seed_1_run_1, path_seed_2_run_1 = [el for el in path_run_1 if 'seed+0' in el], \
+                                                          [el for el in path_run_1 if 'seed+1' in el], \
+                                                          [el for el in path_run_1 if 'seed+2' in el]
 
+    if args.same_seed:
+        res_seed_0, _ = get_intersection_percent_(path_seed_0_run_0[0], path_seed_0_run_1[0])
+        res_seed_1, _ = get_intersection_percent_(path_seed_1_run_0[0], path_seed_1_run_1[0])
+        res_seed_2, _ = get_intersection_percent_(path_seed_2_run_0[0], path_seed_2_run_1[0])
+        print(f'${utils.round_(np.mean([res_seed_0, res_seed_1, res_seed_2]))} \pm '
+              f'{utils.round_(np.std([res_seed_0, res_seed_1, res_seed_2]))}$')
 
-            # path_random_dit = [el for el in path_random if 'dit' in el]
-            # path_random = [el for el in path_random if not 'dit' in el]
+    if args.dif_seed:
+        res_run_0, _ = get_intersection_percent_(path_seed_0_run_0[0], path_seed_1_run_0[0])
+        res_run_1, _ = get_intersection_percent_(path_seed_0_run_1[0], path_seed_1_run_1[0])
+        print(f'${utils.round_(np.mean([res_run_0, res_run_1]))} \pm '
+              f'{utils.round_(np.std([res_run_0, res_run_1]))}$')
 
-            path_run_0 = sorted([el for el in path_random if 'run+0' in el])
-            path_run_1 = sorted([el for el in path_random if 'run+1' in el])
-            #path_run_2 = sorted([el for el in path_random if 'run+2' in el])
-
-            #path_run_0_del = sorted([el for el in path_random_del if 'run+0' in el])
-            #path_run_1_del = sorted([el for el in path_random_del if 'run+1' in el])
-            #path_run_2_del = sorted([el for el in path_random_del if 'run+2' in el])
-
-            path_seed_0_run_0, path_seed_1_run_0, path_seed_2_run_0 = [el for el in path_run_0 if 'seed+0' in el], \
-                                                    [el for el in path_run_0 if 'seed+1' in el], \
-                                                    [el for el in path_run_0 if 'seed+2' in el]
-
-            path_seed_0_run_1, path_seed_1_run_1, path_seed_2_run_1 = [el for el in path_run_1 if 'seed+0' in el], \
-                                                                  [el for el in path_run_1 if 'seed+1' in el], \
-                                                                  [el for el in path_run_1 if 'seed+2' in el]
-
-            #path_seed_0_run_2, path_seed_1_run_2, path_seed_2_run_2 = [el for el in path_run_2 if 'seed+0' in el], \
-            #                                                      [el for el in path_run_2 if 'seed+1' in el], \
-            #                                                      [el for el in path_run_2 if 'seed+2' in el]
-
-            #path_seed_0_run_0_del, path_seed_1_run_0_del, path_seed_2_run_0_del = [el for el in path_run_0_del if 'seed+0' in el], \
-            #                                                          [el for el in path_run_0_del if 'seed+1' in el], \
-            #                                                          [el for el in path_run_0_del if 'seed+2' in el]
-
-            #path_seed_0_run_1_del, path_seed_1_run_1_del, path_seed_2_run_1_del = [el for el in path_run_1_del if 'seed+0' in el], \
-             #                                                         [el for el in path_run_1_del if 'seed+1' in el], \
-             #                                                         [el for el in path_run_1_del if 'seed+2' in el]
-
-            #path_seed_0_run_2_del, path_seed_1_run_2_del, path_seed_2_run_2_del = [el for el in path_run_2_del if 'seed+0' in el], \
-             #                                                         [el for el in path_run_2_del if 'seed+1' in el], \
-             #                                                         [el for el in path_run_2_del if 'seed+2' in el]
-
-            #
-            # path_seed_0, path_seed_0_ens = [el for el in path_seed_0 if 'num_ensemble' not in el],\
-            #                                [el for el in path_seed_0 if 'num_ensemble' in el]
-            # #
-            # path_seed_1, path_seed_1_ens = [el for el in path_seed_1 if 'num_ensemble' not in el], \
-            #                                [el for el in path_seed_1 if 'num_ensemble' in el]
-
-            # print(path_seed_0_run_0[3], path_seed_1_run_0[3], path_seed_2_run_0[3])
-            # print(path_seed_0_run_0[1], path_seed_0_run_0[2], path_seed_0_run_0[3])
-            # print(path_seed_0_run_0[1], path_seed_0_run_0[2], path_seed_0_run_0[3])
-            # try:
-            #     assert_iter_paths([path_seed_0_run_0[0], path_seed_0_run_1[0], path_seed_0_run_2[0]], 'itr+39')
-            #     assert_iter_paths([path_seed_0_run_0[0], path_seed_0_run_1[0], path_seed_0_run_2[0]], 'entropy')
-            #     assert_iter_paths([path_seed_1_run_0[5], path_seed_1_run_1[5], path_seed_1_run_2[5]], 'itr+39')
-            #     assert_iter_paths([path_seed_1_run_0[5], path_seed_1_run_1[5], path_seed_1_run_2[5]], 'margin_score')
-            #     assert_iter_paths([path_seed_2_run_0[10], path_seed_2_run_1[10], path_seed_2_run_2[10]], 'itr+39')
-            #     assert_iter_paths([path_seed_2_run_0[10], path_seed_2_run_1[10], path_seed_2_run_2[10]], 'var_ratio')
-            #     # assert_iter_paths([path_seed_1_run_0[0], path_seed_1_run_1[0], path_seed_1_run_2[0]], 'itr+39')
-            #     # assert_iter_paths([path_seed_2_run_0[0], path_seed_2_run_1[0], path_seed_2_run_2[0]], 'itr+39')
-            # except AssertionError:
-            #     print('Somethings wrong!')
-            res_run_0, _ = get_intersection_percent_(path_seed_0_run_0[0], path_seed_0_run_1[0])
-            res_run_1, _ = get_intersection_percent_(path_seed_1_run_0[0], path_seed_1_run_1[0])
-            #res_run_2, _ = get_intersection_percent_(path_seed_0_run_2[0], path_seed_1_run_2[5], path_seed_2_run_2[10])
-
-            #mean = np.mean([res_run_0, res_run_1, res_run_2])
-            #std = np.std([res_run_0, res_run_1, res_run_2])
-            print(f'${utils.round_(np.mean([res_run_0, res_run_1]))} \pm '
-                  f'{utils.round_(np.std([res_run_0, res_run_1]))}$')
-
-            # print(f'${utils.round_(res_run_0)} \pm '
-            #       f'{utils.round_(0.0)}$')
-        # intersection_support_vectors(f'../{ds}_supports.pkl', path_seed_0[0], path_seed_1[0], path_seed_2[0])
-    # Intersection across 3 seeds
-
-    # print((1.0 * count) / (1.0 * len(idx_res)))
-    # creating_pow_set(final_array, ds)
-
-    # Intersection across 2 acq fun same seed
-    # get_intersection_percent_(path_seed_0[0], path_seed_0[1])
-
-    # Intersection across 2 acq fun different seeds
-    # get_intersection_percent_(path_seed_0[0], path_seed_1[2])
-
-    # Intersection across 3 acq fun same seed
-    # get_intersection_percent_(path_seed_0[0], path_seed_0[1], path_seed_0[2])
-
-    # Intersection across 3 acq fun different seeds
-    # get_intersection_percent_(path_seed_0[0], path_seed_1[1], path_seed_2[1])
-
-
-    # Stopping Criterion + Change intersection across time
-    # get_intersection_precent_across_time(path_seed_0[0], path_seed_1[0], path_seed_2[0], substracting=True, ds=ds)

@@ -22,7 +22,7 @@ def remove_false_from_iter(array, idxs):
 def get_intersection_precent_across_time(*arrays, substracting=False, ds='', plot=True):
     all_arrays = []
     for path in arrays:
-        full_path = os.path.join(os.path.join(logs_dir, path, 'istrain_tracker.pkl'))
+        full_path = os.path.join(os.path.join(args.logs_dir, path, 'istrain_tracker.pkl'))
         with open(full_path, 'rb') as handle: all_arrays.append(pickle.load(handle))
 
     if not substracting:
@@ -114,7 +114,7 @@ def intersection_support_vectors(path_to_support_vectors, *paths_to_runs):
     print(f'There are {len(support_vectors)} support vectors')
     all_arrays = []
     for path in paths_to_runs[0]:
-        full_path = os.path.join(os.path.join(logs_dir, path, 'istrain_tracker.pkl'))
+        full_path = os.path.join(os.path.join(args.logs_dir, path, 'istrain_tracker.pkl'))
         with open(full_path, 'rb') as handle: all_arrays.append(pickle.load(handle))
     res_samps = []
     for array in all_arrays:
@@ -169,35 +169,32 @@ if __name__ == '__main__':
     import utils
     import pandas as pd
 
-    logs_dir = 'YOUR PATH'
-    n_iter = 39
-    for model in ['FastText']:
+    import argparse
 
-        for ds in ['dbpedia']:
+    # We are assuming two runs and three seeds with 39 iterations, no ensemble or deletion and entropy acquisition function
+    parser = argparse.ArgumentParser(description='Intersection Resulting Samples')
+    parser.add_argument('--logs_dir', type=str, default='../logs/', help='Logs directory')
+    parser.add_argument('--model', type=str, default='FastText', help='Model used')
+    parser.add_argument('--dataset', type=str, default='ag_news', help='Dataset used')
+    parser.add_argument('--same_seed', type=bool, help='Same Seed, Different Runs')
+    parser.add_argument('--dif_seed', type=bool, help='Same Run, Different Seeds')
 
-            print('DS IS: ', ds)
-            print('Model is: ', model)
-            for i in ['0.1', '10', '100', '1000']:
-                path_to_support = f'../support_vectors/{ds}_C{i}/{ds}_supports.pkl'
-                print(path_to_support)
-                paths_ds = [el for el in os.listdir(logs_dir) if ds in el]
-                paths_model = [el for el in paths_ds if model in el.split('+')]
-                path_random = [el for el in paths_model if 'entropy' in el.split('+')]
-                path_random = [el for el in path_random if 'dit' not in el]
-                path_random = [el for el in path_random if 'num_ensemble' not in el]
+    args = parser.parse_args()
+    for i in ['0.1', '10', '100', '1000']:
+        path_to_support = f'../support_vectors/{args.dataset}_C{i}/{args.dataset}_supports.pkl'
+        print(path_to_support)
+        paths_ds = [el for el in os.listdir(args.logs_dir) if args.dataset in el]
+        paths_model = [el for el in paths_ds if args.model in el.split('+')]
+        path_random = [el for el in paths_model if 'entropy' in el.split('+')]
+        path_random = [el for el in path_random if 'dit' not in el]
+        path_random = [el for el in path_random if 'num_ensemble' not in el]
+        path_run_0 = sorted([el for el in path_random if 'run+0' in el])
+        path_seed_0_run_0, path_seed_1_run_0, path_seed_2_run_0 = [el for el in path_run_0 if 'seed+0' in el][0], \
+                                                                  [el for el in path_run_0 if 'seed+1' in el][0], \
+                                                                  [el for el in path_run_0 if 'seed+2' in el][0]
 
-                path_run_0 = sorted([el for el in path_random if 'run+0' in el])
+        # Filter
+        assert_iter_paths([path_seed_0_run_0, path_seed_1_run_0, path_seed_2_run_0], 'itr+39')
+        assert_iter_paths([path_seed_0_run_0, path_seed_1_run_0, path_seed_2_run_0], 'entropy')
+        intersection_support_vectors(path_to_support, [path_seed_0_run_0, path_seed_1_run_0, path_seed_2_run_0])
 
-                path_seed_0_run_0, path_seed_1_run_0, path_seed_2_run_0 = [el for el in path_run_0 if 'seed+0' in el][0], \
-                                                                          [el for el in path_run_0 if 'seed+1' in el][0], \
-                                                                          [el for el in path_run_0 if 'seed+2' in el][0]
-                # Filter
-
-                assert_iter_paths([path_seed_0_run_0, path_seed_1_run_0, path_seed_2_run_0], 'itr+39')
-                assert_iter_paths([path_seed_0_run_0, path_seed_1_run_0, path_seed_2_run_0], 'entropy')
-                intersection_support_vectors(path_to_support, [path_seed_0_run_0, path_seed_1_run_0, path_seed_2_run_0])
-
-
-                # print(f'${utils.round_(res_run_0)} \pm '
-                #       f'{utils.round_(0.0)}$')
-            # intersection_support_vectors(f'../{ds}_supports.pkl', path_seed_0[0], path_seed_1[0], path_seed_2[0])

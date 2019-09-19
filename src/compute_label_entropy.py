@@ -15,41 +15,42 @@ if __name__ == '__main__':
     import numpy as np
     import utils
 
-    logs_dir = 'YOUR PATH'
+    import argparse
 
-    for model in ['FastText']:
-        for ds in ['sogou_news', 'dbpedia',
-        'yahoo_answers', 'yelp_review_polarity',
-        'yelp_review_full', 'ag_news',
-        'amazon_review_polarity', 'amazon_review_full']:
-            print('DS IS: ', ds)
-            print('Model is: ', model)
-            # General Filter
-            acc_paths_ds = [el for el in os.listdir(logs_dir) if ds in el]
-            acc_paths_model = [el for el in acc_paths_ds if model in el.split('+')]
+    # We are assuming two runs and three seeds with 39 iterations, no ensemble or deletion and entropy acquisition function
 
-            # Random Filter
-            acc_path_random = [el for el in acc_paths_model if 'random' in el.split('+')]
-            acc_path_random_single_seed = [el for el in acc_path_random if 'seed+0' in el]
-            acc_path_random_single_seed = [el for el in acc_path_random_single_seed if 'dit' not in el]
-            acc_path_random_single_seed_single_run = [el for el in acc_path_random_single_seed if 'run+0' in el]
-            acc_path_random_single_seed_single_run_9_iters = [el for el in acc_path_random_single_seed_single_run
-                                                               if 'itr+9' in el][0]
+    parser = argparse.ArgumentParser(description='Intersection Resulting Samples')
+    parser.add_argument('--logs_dir', type=str, default='../logs/', help='Logs directory')
+    parser.add_argument('--model', type=str, default='FastText', help='Model used')
+    parser.add_argument('--dataset', type=str, default='ag_news', help='Dataset used')
+    parser.add_argument('--same_seed', type=bool, help='Same Seed, Different Runs')
+    parser.add_argument('--dif_seed', type=bool, help='Same Run, Different Seeds')
+    args = parser.parse_args()
 
-            # print(acc_path_random_single_seed_single_run_39_iters.__len__())
-            print(acc_path_random_single_seed_single_run_9_iters)
+    # General Filter
+    acc_paths_ds = [el for el in os.listdir(args.logs_dir) if args.dataset in el]
+    acc_paths_model = [el for el in acc_paths_ds if args.model in el.split('+')]
 
-            # Unc Filter
-            acc_path_unc = [el for el in acc_paths_model if 'entropy' in el.split('+')]
-            acc_path_unc_single_seed = [el for el in acc_path_unc if 'seed+0' in el]
-            acc_path_unc_single_seed = [el for el in acc_path_unc_single_seed if 'dit' not in el]
-            acc_path_unc_single_seed_single_run = [el for el in acc_path_unc_single_seed if 'run+0' in el]
-            acc_path_unc_single_seed_single_run_9_iters = [el for el in acc_path_unc_single_seed_single_run
-                                                            if 'itr+9' in el][0]
+    # Random Filter
+    acc_path_random = [el for el in acc_paths_model if 'random' in el.split('+')]
+    acc_path_random_single_seed = [el for el in acc_path_random if 'seed+0' in el]
+    acc_path_random_single_seed = [el for el in acc_path_random_single_seed if 'dit' not in el]
+    acc_path_random_single_seed_single_run = [el for el in acc_path_random_single_seed if 'run+0' in el]
+    acc_path_random_single_seed_single_run_9_iters = [el for el in acc_path_random_single_seed_single_run
+                                                       if 'itr+9' in el][0]
 
-            # print(acc_path_unc_single_seed_single_run_39_iters.__len__())
-            print(acc_path_unc_single_seed_single_run_9_iters)
 
-            compute_label_entropy(acc_path_random_single_seed_single_run_9_iters,
-                            acc_path_unc_single_seed_single_run_9_iters,
-                            logs_dir=logs_dir)
+    # Unc Filter
+    acc_path_unc = [el for el in acc_paths_model if 'entropy' in el.split('+')]
+    acc_path_unc_single_seed = [el for el in acc_path_unc if 'seed+0' in el]
+    acc_path_unc_single_seed = [el for el in acc_path_unc_single_seed if 'dit' not in el]
+    acc_path_unc_single_seed_single_run = [el for el in acc_path_unc_single_seed if 'run+0' in el]
+    acc_path_unc_single_seed_single_run_9_iters = [el for el in acc_path_unc_single_seed_single_run
+                                                    if 'itr+9' in el][0]
+
+    # print(acc_path_unc_single_seed_single_run_39_iters.__len__())
+    print(acc_path_unc_single_seed_single_run_9_iters)
+
+    compute_label_entropy(acc_path_random_single_seed_single_run_9_iters,
+                    acc_path_unc_single_seed_single_run_9_iters,
+                    logs_dir=args.logs_dir)

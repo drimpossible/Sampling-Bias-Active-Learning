@@ -43,8 +43,11 @@ In particular, you can choose:
 You can also choose all the hyperparameters of your model as well as many active learning related hyperparameters (acquisition function, number of initial data points, number of points queries at each iterations...)
 For a comprehensive list of arguments, please look at the opts.py function. 	
 
-Step 2: To replicate our results, please use the files: compute_intersection.py, compute_intersection_support.py and python compute_label_entropy.py. During training the active learning model (main.py)
-    we automatically savec all the logs in a logs folder. Please put the path of the logs folder at the place of "YOUR PATH" and choose the experiments you want to replicate.
+Step 2: To replicate our results with your logs or our logs, please use: 
+
+    $ compute_intersection.py --dataset [DATASET] --logs_dir [PATH_TO_LOGS] --model [MODEL] --same_seed [BOOL] --dif_seed [BOOL]
+    $ compute_intersection_support.py --dataset [DATASET] --logs_dir [PATH_TO_LOGS] --model [MODEL] --same_seed [BOOL] --dif_seed [BOOL]
+    $ compute_label_entropy.py --dataset [DATASET] --logs_dir [PATH_TO_LOGS] --model [MODEL] --same_seed [BOOL] --dif_seed [BOOL]
 
 
 ## Contact

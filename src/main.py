@@ -54,12 +54,6 @@ if __name__ == '__main__':
 
             logger.debug(f"==> Adding samples..")
             if not opt.query_type == 'coreset':
-                samp_y_prob = y_prob_all[:10]
-                # print(y_prob_all)
-                # print(y_prob_test)
-                print(samp_y_prob)
-                for el in samp_y_prob:
-                   print(max(el))
                 idx, unc = trainer.acquise(y_prob_all=y_prob_all, y_true_all=dset.y, acq=acq, idx=pool_idx, itr=itr, logger=metric_logger_pool)
                 acquised_idx, acquised_funcvals = idx[:num_acq + num_del], unc[:num_acq + num_del]
             else:

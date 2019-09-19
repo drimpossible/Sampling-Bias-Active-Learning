@@ -5,12 +5,11 @@ def myargparser():
     parser = argparse.ArgumentParser(description='Active Learning')
 
     data_args = parser.add_argument_group('Data related arguments')
-    data_args.add_argument('--dataset', type=str, default='trec_qa', choices=['trec_qa', 'sogou_news', 'dbpedia',
+    data_args.add_argument('--dataset', type=str, default='ag_news', choices=['trec_qa', 'sogou_news', 'dbpedia',
                                                                            'yahoo_answers', 'yelp_review_polarity',
                                                                            'yelp_review_full', 'ag_news',
                                                                            'amazon_review_polarity',
-                                                                          'amazon_review_full'],
-                           help='Name of dataset Options: agnews')
+                                                                          'amazon_review_full'], help='Name of dataset Options: agnews')
     data_args.add_argument('--data_dir', type=str, default='../data/', help='Data directory (Eg: ../data/)')
     data_args.add_argument('--num_classes', type=int, default=-1, help='Number of classes in the dataset')
 
@@ -36,7 +35,7 @@ def myargparser():
     misc_args.add_argument('--seed', type=int, default=0, help='Seed value for training')
     misc_args.add_argument('--logpath', type=str, default='../logs/', help='Logging directory (../logs)')
     misc_args.add_argument('--workers', type=int, default=8, help='Number of parallel worker threads')
-    misc_args.add_argument('--exp_name', type=str, default='test_coreset', help='Name of experiment')
+    misc_args.add_argument('--exp_name', type=str, default='test_debug_ag_news', help='Name of experiment')
 
     optim_args = parser.add_argument_group('Optimization related arguments')
     optim_args.add_argument('--num_epochs', type=int, default=25, help='Number of epochs to train the model')
