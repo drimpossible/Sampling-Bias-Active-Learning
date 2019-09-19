@@ -55,7 +55,4 @@ https://github.com/fastai/fastai/tree/master/courses/dl2/imdb_scripts
 
 ## Contact
 
-If facing any problem with the code, please open an issue here. Please do get in touch with us by email for any questions, comments, suggestions regarding the paper!
-ameya.prabhu@oxford.edu, charles.dognin@verisk.com. 
-
-Code stubs and formatting borrowed from [Deep Expander Networks](https://github.com/drimpossible/Deep-Expander-Networks) repository.
+If facing any problem with the code, please open an issue here. Please email for any questions, comments, suggestions regarding the paper on both ameya.prabhu@eng.ox.ac.uk and charles.dognin@verisk.com. Thanks!
