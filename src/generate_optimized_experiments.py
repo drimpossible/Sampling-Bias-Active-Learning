@@ -17,7 +17,7 @@ for run in range(3):
             for dset, l, ne in zip(datasets,lr,num_epochs):
                 for q in query_type:
                     print(f'echo "python main.py --model {m} --dataset {dset} --lr {l} --num_epochs {ne} --query_type {q} --init_train_percent {it} --num_acquise_percent {it} --query_iter {acq} --seed {seed} --exp_name model+{m}+dataset+{dset}+query_type+{q}+lr+{l}+epochs+{ne}+itp_nacq+{it}+itr+{acq}+seed+{seed}+run+0+" >> {dset}_{m}_normal1_exp.sh')
-                    print(f'echo "python main.py --model {m} --dataset {dset} --lr {l} --num_epochs {ne} --query_type {q} --init_train_percent {it} --num_acquise_percent {it} --query_iter {acq} --seed {seed} --num_ensemble 5 --exp_name model+{m}+dataset+{dset}+query_type+{q}+lr+{l}+epochs+{ne}+itp_nacq+{it}+itr+{acq}+num_ensemble+5+seed+{seed}+run+{run}+" >> {dset}_{m}_run{run}_exp.sh')
+                    print(f'echo "python main.py --model {m} --dataset {dset} --lr {l} --num_epochs {ne} --query_type {q} --init_train_percent {it} --num_acquise_percent {it} --query_iter {acq} --seed {seed} --num_ensemble 5 --exp_name model+{m}+dataset+{dset}+query_type+{q}+lr+{l}+epochs+{ne}+itp_nacq+{it}+itr+{acq}+num_ensemble+5+seed+{seed}+run+0+" >> {dset}_{m}_ensemble_exp.sh')
                     print(f'echo "python main.py --model {m} --dataset {dset} --lr {l} --num_epochs {ne} --query_type {q} --init_train_percent {it} --num_acquise_percent {it} --num_delete_percent {dit} --query_iter {acq} --seed {seed} --exp_name model+{m}+dataset+{dset}+query_type+{q}+lr+{l}+epochs+{ne}+itp_nacq+{it}+dit+{dit}+itr+{acq}+seed+{seed}+run+0+" >> {dset}_{m}_dit_exp.sh')
 
 m = 'NaiveBayes'
@@ -43,7 +43,7 @@ for run in range(3):
             for dset, l, ne in zip(datasets,lr,num_epochs):
                 for q in query_type:
                     print(f'echo "python main.py --model {m} --dataset {dset} --lr {l} --num_epochs {ne} --query_type {q} --init_train_percent {it} --num_acquise_percent {it} --query_iter {acq} --seed {seed} --exp_name model+{m}+dataset+{dset}+query_type+{q}+lr+{l}+epochs+{ne}+itp_nacq+{it}+itr+{acq}+seed+{seed}+run+0+" >> {dset}_{m}_normal1_exp.sh')
-                    print(f'echo "python main.py --model {m} --dataset {dset} --lr {l} --num_epochs {ne} --query_type {q} --init_train_percent {it} --num_acquise_percent {it} --query_iter {acq} --seed {seed} --num_ensemble 5 --exp_name model+{m}+dataset+{dset}+query_type+{q}+lr+{l}+epochs+{ne}+itp_nacq+{it}+itr+{acq}+num_ensemble+5+seed+{seed}+run+{run}+" >> {dset}_{m}_run{run}_exp.sh')
+                    print(f'echo "python main.py --model {m} --dataset {dset} --lr {l} --num_epochs {ne} --query_type {q} --init_train_percent {it} --num_acquise_percent {it} --query_iter {acq} --seed {seed} --num_ensemble 5 --exp_name model+{m}+dataset+{dset}+query_type+{q}+lr+{l}+epochs+{ne}+itp_nacq+{it}+itr+{acq}+num_ensemble+5+seed+{seed}+run+0+" >> {dset}_{m}_ensemble_exp.sh')
                     print(f'echo "python main.py --model {m} --dataset {dset} --lr {l} --num_epochs {ne} --query_type {q} --init_train_percent {it} --num_acquise_percent {it} --num_delete_percent {dit} --query_iter {acq} --seed {seed} --exp_name model+{m}+dataset+{dset}+query_type+{q}+lr+{l}+epochs+{ne}+itp_nacq+{it}+dit+{dit}+itr+{acq}+seed+{seed}+run+0+" >> {dset}_{m}_dit_exp.sh')
 
 m = 'NaiveBayes'
