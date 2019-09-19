@@ -1,8 +1,8 @@
-import metrics
-import numpy as np
-import pickle
 import copy
+import numpy as np
+import metrics
 import utils
+
 
 class MetricLogger:
     def __init__(self, opt, logger, mode):

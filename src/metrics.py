@@ -1,11 +1,12 @@
-from sklearn.metrics import calinski_harabaz_score, f1_score, accuracy_score, confusion_matrix
-import numpy as np
-import utils
-from sklearn import preprocessing
-#from numba import njit, prange
 import gc
 
-#@njit(parallel=True,fastmath=True)
+import numpy as np
+from sklearn import preprocessing
+from sklearn.metrics import calinski_harabaz_score, f1_score, confusion_matrix
+
+import utils
+
+
 def calculate_distance(selected_set, unselected_set):
     tot = np.zeros(unselected_set.shape[0])
     for i in range(unselected_set.shape[0]):

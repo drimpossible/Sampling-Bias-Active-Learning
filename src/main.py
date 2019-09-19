@@ -1,16 +1,16 @@
-import os
 import gc
-import opts
-import utils
-import models
-import numpy as np
-import util_classes
-import metrics
-import data
-import query_methods
+import os
 import pickle
+
+import numpy as np
+
+import data
+import metrics
+import opts
+import query_methods
 import trainer
-import matplotlib.pyplot as plt
+import util_classes
+import utils
 
 if __name__ == '__main__':
     global opt, best_prec1
@@ -99,5 +99,4 @@ if __name__ == '__main__':
         train_idx = np.array(utils.mask_to_idx(dset.is_train))
         y_prob_all, y_prob_test, y_feat = trainer.train(opt=opt, dset=dset, epoch=1, logger=logger, data_logger=data_logger)
         metric_logger_test.add(1, y_prob_test, dset.y_test)
-        #TODO: Charles add the testing code here. Code to input which experiments to compare given metric and model.
-        #For eg: --intersection_across [Default=seeds/runs/query_size/query_function] --
+        

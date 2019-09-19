@@ -1,8 +1,7 @@
-import models
-import numpy as np
-import utils
-import os
 import gc
+import os
+import numpy as np
+import models
 
 
 def train(logger, opt, dset, epoch, data_logger):
