@@ -50,6 +50,9 @@ Step 2: To replicate our results with your logs or our logs, please use:
     $ compute_label_entropy.py --dataset [DATASET] --logs_dir [PATH_TO_LOGS] --model [MODEL] --same_seed [BOOL] --dif_seed [BOOL]
 
 
+Step 3: To run the ULMFiT model on the resulting dataset, please use the original repository: 
+https://github.com/fastai/fastai/tree/master/courses/dl2/imdb_scripts
+
 ## Contact
 
 If facing any problem with the code, please open an issue here. Please do get in touch with us by email for any questions, comments, suggestions regarding the paper!
