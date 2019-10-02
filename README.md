@@ -13,7 +13,7 @@ If you find our work useful in your research, please consider citing:
     		title={Sampling Bias in Deep Active Classification: An Empirical Study},
     		author={Ameya Prabhu and Charles Dognin and Maneesh Singh},
     		year={2019},
-   		eprint={1909.09389},
+  			eprint={1909.09389},
     		archivePrefix={arXiv},
     		primaryClass={cs.CL}
 	}
